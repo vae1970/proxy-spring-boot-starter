@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.vae1970.proxy.configuration.ProxyAutoConfiguration

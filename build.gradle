@@ -1,0 +1,36 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+group = 'com.vae1970'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    maven { url 'http://maven.aliyun.com/nexus/content/repositories/central' }
+    mavenCentral()
+}
+
+buildDir = '/dev/shm/proxy-spring-boot-starter'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'com.vae1970'
+            artifactId = 'proxy-spring-boot-starter'
+            version = '0.0.1-SNAPSHOT'
+
+            from components.java
+        }
+    }
+}
+dependencies {
+    compile 'org.springframework.boot:spring-boot-autoconfigure:2.1.8.RELEASE'
+    compile 'org.springframework.boot:spring-boot-starter-test:2.1.8.RELEASE'
+    compile 'com.google.guava:guava:28.1-jre'
+    compile 'org.apache.commons:commons-lang3:3.9'
+    compileOnly 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:2.1.8.RELEASE"
+}
