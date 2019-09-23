@@ -6,6 +6,9 @@ import com.vae1970.proxy.properties.ProxyProperties;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -31,9 +34,17 @@ public class TimerJob {
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             LOCK.lock();
             try {
+                List<Future<List<Proxy>>> resultList = new ArrayList<>();
                 for (int i = 0; i < proxyQueue.remainingCapacity(); i++) {
-//                    poolExecutor.submit();
+                    Future<List<Proxy>> future = poolExecutor.submit(new PageParserJob());
+                    resultList.add(future);
                 }
+                resultList.forEach(future -> {
+                    try {
+                        Optional.ofNullable(future.get()).ifPresent(proxyList -> proxyList.forEach(proxyQueue::offer));
+                    } catch (InterruptedException | ExecutionException ignored) {
+                    }
+                });
             } finally {
                 LOCK.unlock();
             }

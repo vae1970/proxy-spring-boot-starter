@@ -46,11 +46,11 @@ public class XiCiPageParser extends BasePageParser {
                             ProxyType proxyType = Optional.ofNullable(element.selectFirst("td:eq(5)")).map(Element::html)
                                     .map(ProxyType::getType).orElse(null);
                             if (ip != null && port != null && proxyType != null) {
-                                System.out.println(ip + ": " + port);
                                 proxyList.add(Proxy.builder().ip(ip).port(port).type(proxyType).build());
                             }
                         })
                 );
+        System.out.println("xi ci ");
         return proxyList;
     }
 
