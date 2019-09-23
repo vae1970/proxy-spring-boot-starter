@@ -34,4 +34,13 @@ public enum ProxyType {
         return null;
     }
 
+    public static ProxyType getType(String value) {
+        for (ProxyType proxyType : ProxyType.values()) {
+            if (proxyType.name().equals(value)) {
+                return proxyType;
+            }
+        }
+        return null;
+    }
+
 }
