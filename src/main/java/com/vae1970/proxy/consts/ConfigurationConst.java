@@ -20,7 +20,7 @@ public class ConfigurationConst {
     /**
      * default period
      */
-    public static final Integer DEFAULT_PERIOD = 1000;
+    public static final Integer DEFAULT_PERIOD = 15;
     /**
      * default time unit
      */

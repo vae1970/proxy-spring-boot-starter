@@ -1,8 +1,8 @@
 package com.vae1970.proxy.job;
 
 import com.vae1970.proxy.entity.Proxy;
-import com.vae1970.proxy.parser.impl.Ip66PageParser;
-import com.vae1970.proxy.parser.impl.XiCiPageParser;
+import com.vae1970.proxy.parser.Ip66PageParser;
+import com.vae1970.proxy.parser.XiCiPageParser;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -15,7 +15,7 @@ import java.util.function.Supplier;
  */
 public class PageParserJob implements Callable<List<Proxy>> {
 
-    private static final LinkedBlockingQueue<Supplier<List<Proxy>>> SUPPLIER_QUEUE = new LinkedBlockingQueue<>();
+    static final LinkedBlockingQueue<Supplier<List<Proxy>>> SUPPLIER_QUEUE = new LinkedBlockingQueue<>();
 
     static {
         SUPPLIER_QUEUE.offer(XiCiPageParser::listProxy);

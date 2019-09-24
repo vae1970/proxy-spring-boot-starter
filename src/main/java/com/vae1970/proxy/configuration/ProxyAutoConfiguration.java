@@ -32,10 +32,4 @@ public class ProxyAutoConfiguration {
         return proxyQueue;
     }
 
-    @Bean
-    @DependsOn("proxyQueue")
-    public ProxyService proxyService() {
-        return new ProxyService();
-    }
-
 }

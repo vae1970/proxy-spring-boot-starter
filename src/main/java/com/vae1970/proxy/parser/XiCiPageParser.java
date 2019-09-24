@@ -1,13 +1,13 @@
-package com.vae1970.proxy.parser.impl;
+package com.vae1970.proxy.parser;
 
 import com.vae1970.proxy.entity.Proxy;
 import com.vae1970.proxy.enums.ProxyType;
-import com.vae1970.proxy.parser.BasePageParser;
 import com.vae1970.proxy.util.HttpUtil;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.springframework.http.ResponseEntity;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +50,6 @@ public class XiCiPageParser extends BasePageParser {
                             }
                         })
                 );
-        System.out.println("xi ci ");
         return proxyList;
     }
 

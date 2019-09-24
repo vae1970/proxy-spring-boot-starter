@@ -9,6 +9,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -28,14 +29,19 @@ public class TimerJob {
                 , new BasicThreadFactory.Builder().namingPattern("schedule-pool-%d").daemon(true).build());
         //  create thread pool
         final ThreadFactory threadFactory = new ThreadFactoryBuilder().setNameFormat("proxy-scan-thread-%d").build();
-        final ExecutorService poolExecutor = new ThreadPoolExecutor(0, proxyProperties.getMaxThreads(),
+        final ExecutorService poolExecutor = new ThreadPoolExecutor(0, PageParserJob.SUPPLIER_QUEUE.size(),
                 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(1024), threadFactory
                 , new ThreadPoolExecutor.AbortPolicy());
+        //  period range: [period / 2, period)
+        //  为了对抗反.爬虫的评率监测
+        int period = proxyProperties.getPeriod();
+        period = new Random().nextInt(period) / 2 + period / 2;
         scheduledExecutorService.scheduleAtFixedRate(() -> {
             LOCK.lock();
             try {
                 List<Future<List<Proxy>>> resultList = new ArrayList<>();
-                for (int i = 0; i < proxyQueue.remainingCapacity(); i++) {
+                int im = Math.min(proxyQueue.remainingCapacity(), PageParserJob.SUPPLIER_QUEUE.size());
+                for (int i = 0; i < im; i++) {
                     Future<List<Proxy>> future = poolExecutor.submit(new PageParserJob());
                     resultList.add(future);
                 }
@@ -48,7 +54,7 @@ public class TimerJob {
             } finally {
                 LOCK.unlock();
             }
-        }, 0, proxyProperties.getPeriod(), proxyProperties.getTimeUnit());
+        }, 0, period, proxyProperties.getTimeUnit());
     }
 
 }
