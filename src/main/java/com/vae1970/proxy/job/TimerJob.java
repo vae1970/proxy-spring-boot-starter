@@ -33,7 +33,7 @@ public class TimerJob {
                 60L, TimeUnit.SECONDS, new LinkedBlockingQueue<>(1024), threadFactory
                 , new ThreadPoolExecutor.AbortPolicy());
         //  period range: [period / 2, period)
-        //  为了对抗反.爬虫的评率监测
+        //  为了对抗反.爬.虫的频率监测
         int period = proxyProperties.getPeriod();
         period = new Random().nextInt(period) / 2 + period / 2;
         scheduledExecutorService.scheduleAtFixedRate(() -> {
@@ -47,7 +47,11 @@ public class TimerJob {
                 }
                 resultList.forEach(future -> {
                     try {
-                        Optional.ofNullable(future.get()).ifPresent(proxyList -> proxyList.forEach(proxyQueue::offer));
+                        Optional.ofNullable(future.get()).ifPresent(proxyList -> proxyList.forEach(proxy -> {
+                            if (!proxyQueue.contains(proxy)) {
+                                proxyQueue.offer(proxy);
+                            }
+                        }));
                     } catch (InterruptedException | ExecutionException ignored) {
                     }
                 });
@@ -55,6 +59,10 @@ public class TimerJob {
                 LOCK.unlock();
             }
         }, 0, period, proxyProperties.getTimeUnit());
+
+
+
+
     }
 
 }

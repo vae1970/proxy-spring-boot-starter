@@ -32,7 +32,7 @@ public class Ip66PageParser extends BasePageParser {
 
     public static List<Proxy> listProxy() {
         String uri = getUri();
-        ResponseEntity<String> responseEntity = HttpUtil.doGet(getHeader(), null, uri, 6000, 6000, Charset.forName("GBK"));
+        ResponseEntity<String> responseEntity = HttpUtil.doGet(getHeader(), null, uri, 6000, 6000, Charset.forName("GBK"), null);
         List<Proxy> proxyList = new ArrayList<>();
         Optional.ofNullable(responseEntity.getBody()).map(Jsoup::parse)
                 .map(doc -> doc.select("body div#main div.containerbox.boxindex div table tbody tr"))
@@ -47,6 +47,7 @@ public class Ip66PageParser extends BasePageParser {
                         if (ip != null && port != null && protyIncognito) {
                             proxyList.add(Proxy.builder().ip(ip).port(port).build());
                         }
+                        System.out.println(element.toString());
                     });
                 });
         return proxyList;

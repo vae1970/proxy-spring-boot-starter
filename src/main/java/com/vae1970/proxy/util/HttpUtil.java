@@ -1,6 +1,8 @@
 package com.vae1970.proxy.util;
 
+import com.vae1970.proxy.entity.Proxy;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -55,7 +57,7 @@ public class HttpUtil {
      * @return ResponseEntity<String>
      */
     public static ResponseEntity<String> doGet(Map<String, String> headers, Map<String, String> params, String uri) {
-        return doGet(headers, params, uri, CONNECT_TIMEOUT, SOCKET_TIMEOUT, ENCODING);
+        return doGet(headers, params, uri, CONNECT_TIMEOUT, SOCKET_TIMEOUT, ENCODING, null);
     }
 
     /**
@@ -69,10 +71,11 @@ public class HttpUtil {
      * @param charset        charset
      * @return ResponseEntity<String>
      */
-    public static ResponseEntity<String> doGet(Map<String, String> headers, Map<String, String> params, String uri, int connectTimeout, int socketTimeout, Charset charset) {
+    public static ResponseEntity<String> doGet(Map<String, String> headers, Map<String, String> params, String uri, int connectTimeout, int socketTimeout, Charset charset, Proxy proxy) {
         try {
             CloseableHttpClient httpClient = HttpClients.createDefault();
             URIBuilder uriBuilder = new URIBuilder(uri);
+            HttpHost httpHost = proxy == null ? null : new HttpHost(proxy.getIp(), proxy.getPort(), uriBuilder.getScheme());
             if (params != null) {
                 Set<Map.Entry<String, String>> entrySet = params.entrySet();
                 for (Map.Entry<String, String> entry : entrySet) {
@@ -80,7 +83,8 @@ public class HttpUtil {
                 }
             }
             HttpGet httpGet = new HttpGet(uriBuilder.build());
-            RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(connectTimeout).setSocketTimeout(socketTimeout).build();
+            RequestConfig requestConfig = RequestConfig.custom().setConnectTimeout(connectTimeout)
+                    .setSocketTimeout(socketTimeout).setProxy(httpHost).build();
             httpGet.setConfig(requestConfig);
             if (headers != null) {
                 Set<Map.Entry<String, String>> entrySet = headers.entrySet();
