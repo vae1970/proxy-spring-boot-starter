@@ -12,6 +12,13 @@ public class ConcurrentQueue<T> extends LinkedBlockingQueue<T> {
 
     private final ReentrantLock lock = new ReentrantLock();
 
+    public ConcurrentQueue() {
+    }
+
+    public ConcurrentQueue(int capacity) {
+        super(capacity);
+    }
+
     @Override
     public T poll() {
         lock.lock();

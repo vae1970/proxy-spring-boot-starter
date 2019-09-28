@@ -3,10 +3,10 @@ package com.vae1970.proxy.job;
 import com.vae1970.proxy.entity.Proxy;
 import com.vae1970.proxy.parser.Ip66PageParser;
 import com.vae1970.proxy.parser.XiCiPageParser;
+import com.vae1970.proxy.util.ConcurrentQueue;
 
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Supplier;
 
 /**
@@ -15,7 +15,7 @@ import java.util.function.Supplier;
  */
 public class PageParserJob implements Callable<List<Proxy>> {
 
-    static final LinkedBlockingQueue<Supplier<List<Proxy>>> SUPPLIER_QUEUE = new LinkedBlockingQueue<>();
+    static final ConcurrentQueue<Supplier<List<Proxy>>> SUPPLIER_QUEUE = new ConcurrentQueue<>();
 
     static {
         SUPPLIER_QUEUE.offer(XiCiPageParser::listProxy);
