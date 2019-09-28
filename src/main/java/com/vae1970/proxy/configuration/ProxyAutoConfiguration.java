@@ -26,7 +26,7 @@ public class ProxyAutoConfiguration {
     public ConcurrentQueue<Proxy> proxyQueue() {
         //  指定max数量
         ConcurrentQueue<Proxy> proxyQueue = new ConcurrentQueue<>(proxyProperties.getMaxIps());
-        new TimerJob(proxyQueue, proxyProperties).run();
+        new TimerJob(proxyQueue, proxyProperties).start();
         return proxyQueue;
     }
 

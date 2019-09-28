@@ -37,6 +37,10 @@ public class HttpUtil {
         return doGet(null, null, uri);
     }
 
+    public static ResponseEntity<String> doGet(String uri, Proxy proxy) {
+        return doGet(null, null, uri, CONNECT_TIMEOUT, SOCKET_TIMEOUT, ENCODING, proxy);
+    }
+
     /**
      * HTTP GET method
      *

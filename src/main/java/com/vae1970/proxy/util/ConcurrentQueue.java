@@ -8,6 +8,7 @@ import java.util.concurrent.locks.ReentrantLock;
  *
  * @author vae
  */
+@SuppressWarnings("UnusedReturnValue")
 public class ConcurrentQueue<T> extends LinkedBlockingQueue<T> {
 
     private final ReentrantLock lock = new ReentrantLock();
@@ -19,8 +20,12 @@ public class ConcurrentQueue<T> extends LinkedBlockingQueue<T> {
         super(capacity);
     }
 
-    @Override
-    public T poll() {
+    /**
+     * poll then offer
+     *
+     * @return data
+     */
+    public T pollAndOffer() {
         lock.lock();
         try {
             T queue = super.poll();
@@ -33,8 +38,13 @@ public class ConcurrentQueue<T> extends LinkedBlockingQueue<T> {
         }
     }
 
-    @Override
-    public boolean offer(T e) {
+    /**
+     * distinct and offer
+     *
+     * @param e data
+     * @return boolean
+     */
+    public boolean distinctOffer(T e) {
         lock.lock();
         try {
             if (this.contains(e)) {

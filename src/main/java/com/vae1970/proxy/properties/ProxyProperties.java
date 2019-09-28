@@ -33,4 +33,6 @@ public class ProxyProperties {
      */
     private TimeUnit timeUnit = DEFAULT_TIME_UNIT;
 
+    private Integer checkPeriod = DEFAULT_PERIOD;
+
 }

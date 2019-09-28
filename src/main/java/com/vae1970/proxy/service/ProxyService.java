@@ -20,7 +20,7 @@ public class ProxyService {
 
     public Proxy getProxy() {
         System.out.println("size: " + proxyQueue.size());
-        return proxyQueue.poll();
+        return proxyQueue.pollAndOffer();
     }
 
 }
