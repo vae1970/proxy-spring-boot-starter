@@ -9,32 +9,35 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author vae
  */
 public class ConcurrentQueue<T> extends LinkedBlockingQueue<T> {
-    private ReentrantLock lock;
 
-    /**
-     * poll then offer
-     *
-     * @return T
-     */
-    public T pollAndOffer() {
-        T queue = super.poll();
-        if (queue != null) {
-            super.offer(queue);
-        }
-        return queue;
-    }
+    private final ReentrantLock lock = new ReentrantLock();
 
-    /**
-     * distinct then offer
-     *
-     * @param t T
-     * @return boolean
-     */
-    public boolean distinctAndOffer(T t) {
-        if (this.contains(t)) {
-            return false;
-        } else {
-            return super.offer(t);
+    @Override
+    public T poll() {
+        lock.lock();
+        try {
+            T queue = super.poll();
+            if (queue != null) {
+                super.offer(queue);
+            }
+            return queue;
+        } finally {
+            lock.unlock();
         }
     }
+
+    @Override
+    public boolean offer(T e) {
+        lock.lock();
+        try {
+            if (this.contains(e)) {
+                return false;
+            } else {
+                return super.offer(e);
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
+
 }
